@@ -50,6 +50,7 @@ var KeyCurrentVersion = 4;
  *
  */
 var Account = function (priv, path) {
+    priv = priv || cryptoUtils.crypto.randomBytes(32);
     this.setPrivateKey(priv);
     this.path = path;
 };
@@ -276,7 +277,7 @@ Account.prototype = {
      * @example var key = account.toKey("passphrase");
      */
     toKey: function (password, opts) {
-        /*jshint maxcomplexity:16 */
+        /*jshint maxcomplexity:17 */
 
         opts = opts || {};
         var salt = opts.salt || cryptoUtils.crypto.randomBytes(32);
@@ -349,7 +350,7 @@ Account.prototype = {
      * @return {@link Account} - Instance of Account restored from key and passphrase.
      */
     fromKey: function (input, password, nonStrict) {
-        /*jshint maxcomplexity:9 */
+        /*jshint maxcomplexity:10 */
 
         var json = (typeof input === 'object') ? input : JSON.parse(nonStrict ? input.toLowerCase() : input);
         if (json.version !== KeyVersion3 && json.version !== KeyCurrentVersion) {

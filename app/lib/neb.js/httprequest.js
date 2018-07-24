@@ -31,21 +31,32 @@ HttpRequest.prototype.request = function (method, api, payload, axiosOptions) {
         method: method,
         url: this.createUrl(api),
         data: payload,
-        transformResponse: [function (resp) {
-            if (typeof (resp) === "string") {
-                resp = JSON.parse(resp);
-            }
-            return resp.result || resp;
-        }]
     };
     if (axiosOptions && typeof axiosOptions.onDownloadProgress === 'function') {
         axiosParams.onDownloadProgress = axiosOptions.onDownloadProgress;
     }
     return axios(axiosParams).then(function (resp) {
-        return resp.data;
+		if("text/html; charset=UTF-8" === resp.headers['content-type']){
+			throw new Error(resp.status+' - '+resp.statusText);
+		}
+		if(typeof(resp.data) === "string"){
+			try{
+				resp.data = JSON.parse(resp.data);
+			} catch(e){
+				throw new Error('Response is invalid json');
+			}
+		}
+		return resp.data.result || resp.data;
     }).catch(function (e) {
         if (typeof e.response !== "undefined") {
+		    if(typeof(e.response.data) === 'object'){   //400 error
             throw new Error(e.response.data.error);
+            }else {     //500 error
+                var err = e.response.status + ' - ' + e.response.statusText;
+                err += "\n" + api + " " + JSON.stringify(payload);
+                throw new Error(err);
+            }
+
         } else {
             throw new Error(e.message);
         }

@@ -243,7 +243,7 @@ API.prototype.getTransactionByContract = function (options) {
     options = utils.argumentsToObject(['address'], arguments);
     var params = { "address": options.address };
     return this._sendRequest("post", "/getTransactionByContract", params);
-}
+};
 
 /**
  * Return the subscribed events of transaction & block.
@@ -373,6 +373,7 @@ API.prototype.getEventsByHash = function (options) {
  * });
  */
 API.prototype.getDynasty = function (options) {
+    options = utils.argumentsToObject(['height'], arguments);
     var params = {"height": options.height};
     return this._sendRequest("post", "/dynasty", params);
 };

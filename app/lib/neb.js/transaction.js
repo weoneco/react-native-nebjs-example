@@ -132,7 +132,9 @@ var Transaction = function (options) {
     this.from = account.fromAddress(options.from);
     this.to = account.fromAddress(options.to);
     this.value = utils.toBigNumber(options.value);
-    this.nonce = options.nonce;
+    if(!this.value.isInteger())
+        throw new Error("Invalid value! The minimum unit is wei (1^-18nas)");
+    this.nonce = parseInt(options.nonce); // An error will be thrown is nonce is string. Error: "nonce: integer|Long expected"
     this.timestamp = Math.floor(new Date().getTime()/1000);
     this.contract = options.contract;
     this.gasPrice = utils.toBigNumber(options.gasPrice);

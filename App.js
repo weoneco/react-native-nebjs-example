@@ -42,7 +42,7 @@ export default class App extends Component<Props> {
 
 
     var Transaction = Nebulas.Transaction;
-    var tx = new Transaction(100, account, account, "10", 1);
+    var tx = new Transaction(1001, account, account, "10", 1);
     tx.signTransaction();
     console.log("hash:" + tx.hash.toString("hex"));
     console.log("sign:" + tx.sign.toString("hex"));
